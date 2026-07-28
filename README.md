@@ -80,15 +80,28 @@ drop-in swap.
 ## What's built vs. what's next
 
 **Built now:**
-- Dashboard with per-relationship trust rings and totals
+- Multi-user accounts — sign up / log in, each with a private ledger
+- Dashboard with per-relationship trust rings, totals, and an upcoming-reminders panel
 - Create agreement form with live EMI calculation
 - Auto-generated PDF loan contract
-- Shared repayment schedule + mark-as-paid + activity log
+- **Partial payments** — record any amount against an installment, not just the full amount
+- **Automatic late fees** — 2%/month accrues on overdue balances, shown live
+- **Payment proof upload** — attach a screenshot to any recorded payment
+- **Shareable borrower link** — "Share with borrower" copies a read-only link, no login needed on their end (it's a point-in-time snapshot — see note below)
+- **CSV export** — export your full agreement list, or a single loan's schedule
+- **WhatsApp reminders** — one tap on the Dashboard sends a pre-filled reminder message for anything due within 7 days
 - Fully responsive, glassmorphism UI, installable PWA
-- Backend scaffold ready for real auth + MongoDB
+- Backend scaffold (Express + MongoDB) with matching partial-payment support, ready for real auth + persistence
 
-**Natural next steps:**
-- Wire frontend to backend (see above) for multi-device sync
-- Real two-sided accounts — send borrower a link to confirm/accept the agreement
-- Email/SMS reminders before due dates (Nodemailer / Twilio)
-- Payment proof upload (UPI/bank screenshot) for borrower-submitted confirmations
+**Known limitation — read carefully before using this for real money:**
+The shared borrower link and all data are currently **local to the browser you're using** (no live backend connected). This means:
+- Data doesn't sync across your phone and laptop — same account "loans" won't show up on both.
+- The borrower's shared link shows a **snapshot** frozen at the moment you clicked Share — if you record a new payment afterwards, the borrower needs a fresh link to see it.
+- Anyone with physical/browser access to your device can see your data (there's no server-side security).
+
+**To become truly production-ready** (real security, live sync, always-current borrower links), wire the frontend to the `backend/` API — see the "Backend" section above. That's the one remaining step between "solid demo" and "actually production."
+
+**Natural next steps after that:**
+- Real email/SMS reminders (Nodemailer / Twilio) — needs your own service credentials
+- Two-way borrower accounts (confirm/dispute changes, not just view)
+- Reputation/relationship insights across repeat borrowers

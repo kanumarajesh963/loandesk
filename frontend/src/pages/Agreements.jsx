@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { FileSpreadsheet } from 'lucide-react'
 import GlassCard from '../components/GlassCard'
 import StatusBadge from '../components/StatusBadge'
 import { summarize, formatINR, formatDate } from '../lib/calc'
+import { exportAgreementsCSV } from '../lib/csv'
 
 const FILTERS = ['all', 'active', 'overdue', 'closed']
 
@@ -13,9 +15,19 @@ export default function Agreements({ agreements, openAgreement }) {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="font-display font-bold text-2xl md:text-3xl">Agreements</h1>
-        <p className="text-mist text-sm mt-1">Every loan you've created, in one ledger.</p>
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <h1 className="font-display font-bold text-2xl md:text-3xl">Agreements</h1>
+          <p className="text-mist text-sm mt-1">Every loan you've created, in one ledger.</p>
+        </div>
+        {agreements.length > 0 && (
+          <button
+            onClick={() => exportAgreementsCSV(agreements, summarize)}
+            className="focus-ring flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors shrink-0"
+          >
+            <FileSpreadsheet size={16} /> Export CSV
+          </button>
+        )}
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-1">

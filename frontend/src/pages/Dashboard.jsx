@@ -1,8 +1,8 @@
-import { TrendingUp, AlertTriangle, Wallet, Users } from 'lucide-react'
+import { TrendingUp, AlertTriangle, Wallet, Users, Bell, MessageCircle } from 'lucide-react'
 import GlassCard from '../components/GlassCard'
 import TrustRing from '../components/TrustRing'
 import StatusBadge from '../components/StatusBadge'
-import { summarize, formatINR, formatDate } from '../lib/calc'
+import { summarize, formatINR, formatDate, daysUntil } from '../lib/calc'
 
 function StatCard({ icon: Icon, label, value, tint }) {
   return (
@@ -25,6 +25,21 @@ export default function Dashboard({ agreements, openAgreement, setView }) {
   const overdueCount = enriched.filter(a => a.summary.status === 'overdue').length
   const activeCount = enriched.filter(a => a.summary.status !== 'closed').length
 
+  const reminders = enriched
+    .filter(a => a.summary.nextDue)
+    .map(a => ({ agreement: a, item: a.summary.nextDue, days: daysUntil(a.summary.nextDue.dueDate) }))
+    .filter(r => r.days <= 7)
+    .sort((a, b) => a.days - b.days)
+
+  function whatsappLink(r) {
+    const text = encodeURIComponent(
+      `Hi ${r.agreement.borrowerName}, a friendly reminder — your installment of ${formatINR(r.item.amount)} is ${
+        r.days < 0 ? `overdue since ${formatDate(r.item.dueDate)}` : r.days === 0 ? 'due today' : `due on ${formatDate(r.item.dueDate)}`
+      }. Thanks!`
+    )
+    return `https://wa.me/?text=${text}`
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -38,6 +53,36 @@ export default function Dashboard({ agreements, openAgreement, setView }) {
         <StatCard icon={AlertTriangle} label="Overdue loans" value={overdueCount} tint="bg-coral/15 text-coral" />
         <StatCard icon={Users} label="Active relationships" value={activeCount} tint="bg-mist/15 text-mist" />
       </div>
+
+      {reminders.length > 0 && (
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <Bell size={16} className="text-gold" />
+            <h2 className="font-display font-semibold text-lg">Reminders</h2>
+          </div>
+          <GlassCard className="divide-y divide-white/8">
+            {reminders.map(r => (
+              <div key={r.item.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">{r.agreement.borrowerName}</p>
+                  <p className="text-xs text-mist">
+                    {formatINR(r.item.amount)} · {r.days < 0 ? `${Math.abs(r.days)}d overdue` : r.days === 0 ? 'due today' : `due in ${r.days}d`}
+                  </p>
+                </div>
+                <a
+                  href={whatsappLink(r)}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="focus-ring flex items-center gap-1.5 text-xs font-medium bg-teal/15 text-teal border border-teal/30 rounded-lg px-3 py-1.5 hover:bg-teal/20 transition-colors shrink-0"
+                >
+                  <MessageCircle size={13} /> Remind
+                </a>
+              </div>
+            ))}
+          </GlassCard>
+        </div>
+      )}
 
       <div>
         <div className="flex items-center justify-between mb-3">

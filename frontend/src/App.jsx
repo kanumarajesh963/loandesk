@@ -5,9 +5,11 @@ import Agreements from './pages/Agreements'
 import CreateAgreement from './pages/CreateAgreement'
 import AgreementDetail from './pages/AgreementDetail'
 import Login from './pages/Login'
+import BorrowerView from './pages/BorrowerView'
 import { getAgreements, getAgreement, seedDemoData } from './lib/storage'
 import { generateSchedule } from './lib/calc'
 import { getCurrentUser, logout } from './lib/auth'
+import { decodeShareLink } from './lib/shareLink'
 
 export default function App() {
   const [user, setUser] = useState(() => getCurrentUser())
@@ -24,6 +26,16 @@ export default function App() {
     seedDemoData(generateSchedule)
     refresh()
   }, [user, refresh])
+
+  // Shared read-only borrower link — works with no login, checked first.
+  const params = new URLSearchParams(window.location.search)
+  const sharedParam = params.get('share')
+  if (sharedParam) {
+    const shared = decodeShareLink(sharedParam)
+    if (shared) {
+      return <BorrowerView agreement={shared} />
+    }
+  }
 
   function handleAuthed(authedUser) {
     setUser(authedUser)

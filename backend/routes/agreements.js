@@ -76,7 +76,7 @@ router.get('/:id', async (req, res) => {
   res.json(agreement)
 })
 
-// Mark an installment as paid
+// Record a payment against an installment (supports partial amounts)
 router.patch('/:id/installments/:installmentId/pay', async (req, res) => {
   const agreement = await Agreement.findOne({ _id: req.params.id, lender: req.userId })
   if (!agreement) return res.status(404).json({ error: 'Agreement not found' })
@@ -84,11 +84,16 @@ router.patch('/:id/installments/:installmentId/pay', async (req, res) => {
   const installment = agreement.schedule.id(req.params.installmentId)
   if (!installment) return res.status(404).json({ error: 'Installment not found' })
 
-  installment.paid = true
-  installment.paidDate = new Date()
+  const amount = Number(req.body.amount) || (installment.amount - installment.amountPaid)
+  installment.amountPaid = Math.min(installment.amount, installment.amountPaid + amount)
+  installment.paid = installment.amountPaid >= installment.amount
+  if (installment.paid) installment.paidDate = new Date()
+
   agreement.paymentLog.unshift({
     installmentId: installment._id,
-    note: req.body.note || 'Marked as paid'
+    amount,
+    proofImage: req.body.proofImage || null,
+    note: req.body.note || 'Payment recorded'
   })
 
   await agreement.save()

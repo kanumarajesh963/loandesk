@@ -55,22 +55,38 @@ export function getAgreement(id) {
   return getAgreements().find(a => a.id === id) || null
 }
 
-export function markInstallmentPaid(agreementId, installmentId, note) {
+export function recordPayment(agreementId, installmentId, { amount, note, proofImage } = {}) {
   return updateAgreement(agreementId, (agreement) => {
-    const schedule = agreement.schedule.map(item =>
-      item.id === installmentId
-        ? { ...item, paid: true, paidDate: new Date().toISOString() }
-        : item
-    )
+    const schedule = agreement.schedule.map(item => {
+      if (item.id !== installmentId) return item
+      const newAmountPaid = Math.min(item.amount, (item.amountPaid || 0) + (amount || 0))
+      return {
+        ...item,
+        amountPaid: newAmountPaid,
+        paid: newAmountPaid >= item.amount,
+        paidDate: newAmountPaid >= item.amount ? new Date().toISOString() : item.paidDate
+      }
+    })
     const log = agreement.paymentLog || []
     log.unshift({
       id: crypto.randomUUID(),
       installmentId,
       date: new Date().toISOString(),
-      note: note || 'Marked as paid'
+      amount: amount || 0,
+      note: note || 'Payment recorded',
+      proofImage: proofImage || null
     })
     return { ...agreement, schedule, paymentLog: log }
   })
+}
+
+// Kept for backward compatibility — marks an installment fully paid in one go.
+export function markInstallmentPaid(agreementId, installmentId, note) {
+  const agreement = getAgreement(agreementId)
+  const item = agreement?.schedule.find(i => i.id === installmentId)
+  if (!item) return null
+  const remaining = item.amount - (item.amountPaid || 0)
+  return recordPayment(agreementId, installmentId, { amount: remaining, note })
 }
 
 export function seedDemoData(generateSchedule) {
@@ -87,6 +103,7 @@ export function seedDemoData(generateSchedule) {
   })
   if (schedule[0]) {
     schedule[0].paid = true
+    schedule[0].amountPaid = schedule[0].amount
     schedule[0].paidDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString()
   }
   const demo = {
@@ -100,7 +117,7 @@ export function seedDemoData(generateSchedule) {
     collateral: 'None',
     createdAt: new Date().toISOString(),
     startDate,
-    paymentLog: [{ id: crypto.randomUUID(), installmentId: schedule[0].id, date: schedule[0].paidDate, note: 'Marked as paid' }],
+    paymentLog: [{ id: crypto.randomUUID(), installmentId: schedule[0].id, date: schedule[0].paidDate, amount: schedule[0].amount, note: 'Marked as paid' }],
     schedule
   }
   persist([demo])

@@ -4,6 +4,7 @@ const installmentSchema = new mongoose.Schema({
   installment: Number,
   dueDate: Date,
   amount: Number,
+  amountPaid: { type: Number, default: 0 },
   paid: { type: Boolean, default: false },
   paidDate: Date
 }, { _id: true })
@@ -11,6 +12,8 @@ const installmentSchema = new mongoose.Schema({
 const paymentLogSchema = new mongoose.Schema({
   installmentId: mongoose.Schema.Types.ObjectId,
   date: { type: Date, default: Date.now },
+  amount: Number,
+  proofImage: String, // base64 or an uploaded file URL, depending on your storage choice
   note: String
 }, { _id: true })
 
