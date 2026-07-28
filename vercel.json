@@ -1,0 +1,10 @@
+@"
+{
+  "services": {
+    "frontend": {
+      "root": "frontend",
+      "framework": "vite"
+    }
+  }
+}
+"@ | Out-File -Encoding utf8 vercel.json
