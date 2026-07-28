@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #eef2f9;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(45,212,191,0.16), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(242,184,85,0.10), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(242,114,107,0.10), transparent 45%),
+    #0b1220;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 999px; }
+
+.glass {
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.09);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-strong {
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #2dd4bf;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
