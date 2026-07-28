@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # LoanDesk — Loan Agreements & Trust Ledger
 
 A two-sided loan agreement app: create agreements, auto-generate a PDF contract,
@@ -82,6 +81,4 @@ drop-in swap.
 - Real two-sided accounts — send borrower a link to confirm/accept the agreement
 - Email/SMS reminders before due dates (Nodemailer / Twilio)
 - Payment proof upload (UPI/bank screenshot) for borrower-submitted confirmations
-=======
 # loandesk
->>>>>>> fe03fb335eca77bd5f825e3cc3f021a8e02b411e
