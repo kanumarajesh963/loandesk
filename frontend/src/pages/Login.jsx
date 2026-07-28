@@ -1,7 +1,11 @@
 import { useState } from 'react'
-import { HandCoins } from 'lucide-react'
+import { HandCoins, Sparkles } from 'lucide-react'
 import GlassCard from '../components/GlassCard'
 import { login, signup } from '../lib/auth'
+
+const DEMO_EMAIL = 'demo@loandesk.app'
+const DEMO_PASSWORD = 'demo1234'
+const DEMO_NAME = 'Demo User'
 
 const inputClass =
   'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-mist/60 focus-ring focus:border-teal/40 outline-none transition-colors'
@@ -26,6 +30,22 @@ export default function Login({ onAuthed }) {
     }
   }
 
+  function handleDemoLogin() {
+    setError('')
+    try {
+      const user = login(DEMO_EMAIL, DEMO_PASSWORD)
+      onAuthed(user)
+    } catch {
+      // Demo account doesn't exist on this device/browser yet — create it.
+      try {
+        const user = signup(DEMO_NAME, DEMO_EMAIL, DEMO_PASSWORD)
+        onAuthed(user)
+      } catch (err) {
+        setError(err.message)
+      }
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
@@ -38,6 +58,20 @@ export default function Login({ onAuthed }) {
         </div>
 
         <GlassCard className="p-6 md:p-8">
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            className="focus-ring w-full flex items-center justify-center gap-2 bg-gold/15 text-gold border border-gold/30 rounded-xl py-3 font-medium hover:bg-gold/20 transition-colors mb-5"
+          >
+            <Sparkles size={16} /> Try the demo — no signup needed
+          </button>
+
+          <div className="flex items-center gap-3 mb-5">
+            <div className="h-px flex-1 bg-white/10" />
+            <span className="text-xs text-mist">or use your own account</span>
+            <div className="h-px flex-1 bg-white/10" />
+          </div>
+
           <div className="flex gap-1 mb-6 bg-white/5 rounded-xl p-1">
             <button
               type="button"
@@ -89,7 +123,8 @@ export default function Login({ onAuthed }) {
         </GlassCard>
 
         <p className="text-center text-xs text-mist mt-6">
-          Stored on this device only — a real backend scaffold is included in <code className="text-mist/80">backend/</code> for syncing across devices.
+          Demo login: <code className="text-mist/80">demo@loandesk.app</code> / <code className="text-mist/80">demo1234</code> — or click the button above.
+          Stored on this device only.
         </p>
       </div>
     </div>
