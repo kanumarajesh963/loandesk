@@ -58,20 +58,6 @@ export default function Login({ onAuthed }) {
         </div>
 
         <GlassCard className="p-6 md:p-8">
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            className="focus-ring w-full flex items-center justify-center gap-2 bg-gold/15 text-gold border border-gold/30 rounded-xl py-3 font-medium hover:bg-gold/20 transition-colors mb-5"
-          >
-            <Sparkles size={16} /> Try the demo — no signup needed
-          </button>
-
-          <div className="flex items-center gap-3 mb-5">
-            <div className="h-px flex-1 bg-white/10" />
-            <span className="text-xs text-mist">or use your own account</span>
-            <div className="h-px flex-1 bg-white/10" />
-          </div>
-
           <div className="flex gap-1 mb-6 bg-white/5 rounded-xl p-1">
             <button
               type="button"
@@ -120,12 +106,15 @@ export default function Login({ onAuthed }) {
               {mode === 'login' ? 'Log in' : 'Create account'}
             </button>
           </form>
-        </GlassCard>
 
-        <p className="text-center text-xs text-mist mt-6">
-          Demo login: <code className="text-mist/80">demo@loandesk.app</code> / <code className="text-mist/80">demo1234</code> — or click the button above.
-          Stored on this device only.
-        </p>
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            className="focus-ring w-full flex items-center justify-center gap-2 bg-gold/15 text-gold border border-gold/30 rounded-xl py-3 font-medium hover:bg-gold/20 transition-colors mt-4"
+          >
+            <Sparkles size={16} /> Try the demo — no signup needed
+          </button>
+        </GlassCard>
       </div>
     </div>
   )

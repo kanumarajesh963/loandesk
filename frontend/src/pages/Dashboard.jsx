@@ -6,13 +6,13 @@ import { summarize, formatINR, formatDate } from '../lib/calc'
 
 function StatCard({ icon: Icon, label, value, tint }) {
   return (
-    <GlassCard className="p-5 flex items-center gap-4">
-      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${tint}`}>
-        <Icon size={20} />
+    <GlassCard className="p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-2.5 md:gap-4">
+      <div className={`w-9 h-9 md:w-11 md:h-11 rounded-xl flex items-center justify-center shrink-0 ${tint}`}>
+        <Icon size={18} />
       </div>
-      <div className="min-w-0">
+      <div className="min-w-0 w-full">
         <p className="text-mist text-xs mb-0.5">{label}</p>
-        <p className="font-display font-bold text-xl truncate">{value}</p>
+        <p className="font-display font-bold text-lg md:text-xl leading-tight break-words">{value}</p>
       </div>
     </GlassCard>
   )
