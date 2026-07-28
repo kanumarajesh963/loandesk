@@ -4,10 +4,13 @@ import Dashboard from './pages/Dashboard'
 import Agreements from './pages/Agreements'
 import CreateAgreement from './pages/CreateAgreement'
 import AgreementDetail from './pages/AgreementDetail'
+import Login from './pages/Login'
 import { getAgreements, getAgreement, seedDemoData } from './lib/storage'
 import { generateSchedule } from './lib/calc'
+import { getCurrentUser, logout } from './lib/auth'
 
 export default function App() {
+  const [user, setUser] = useState(() => getCurrentUser())
   const [view, setView] = useState('dashboard')
   const [agreements, setAgreements] = useState([])
   const [selectedId, setSelectedId] = useState(null)
@@ -17,9 +20,23 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    if (!user) return
     seedDemoData(generateSchedule)
     refresh()
-  }, [refresh])
+  }, [user, refresh])
+
+  function handleAuthed(authedUser) {
+    setUser(authedUser)
+    setView('dashboard')
+  }
+
+  function handleLogout() {
+    logout()
+    setUser(null)
+    setAgreements([])
+    setSelectedId(null)
+    setView('dashboard')
+  }
 
   function openAgreement(id) {
     setSelectedId(id)
@@ -31,11 +48,15 @@ export default function App() {
     setView(nextView)
   }
 
+  if (!user) {
+    return <Login onAuthed={handleAuthed} />
+  }
+
   const selected = selectedId ? getAgreement(selectedId) : null
 
   return (
     <div className="min-h-screen pb-24 md:pb-0 font-body">
-      <TopNav view={view} setView={goTo} />
+      <TopNav view={view} setView={goTo} user={user} onLogout={handleLogout} />
       <main className="max-w-5xl mx-auto px-4 md:px-8 py-6 md:py-10">
         {view === 'dashboard' && (
           <Dashboard agreements={agreements} openAgreement={openAgreement} setView={goTo} />
@@ -54,7 +75,7 @@ export default function App() {
           />
         )}
       </main>
-      <BottomNav view={view} setView={goTo} />
+      <BottomNav view={view} setView={goTo} onLogout={handleLogout} />
     </div>
   )
 }

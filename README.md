@@ -10,6 +10,17 @@ loandesk/
 └── backend/      Node + Express + MongoDB — scaffold for real persistence & auth
 ```
 
+## Multiple people / accounts
+
+The app now has sign up / log in. Each account has its own private list of
+agreements — so if two people use the app on the same device/browser, they
+create separate accounts and never see each other's loans.
+
+This auth is local-only (stored in the browser, lightly obscured — not
+production-grade security). It's there so you can try multi-person use
+immediately. For real security and syncing across devices, wire up the
+`backend/` scaffold (JWT + bcrypt, already built) — see below.
+
 ## Quick start (frontend only — runs in 2 minutes)
 
 The frontend works standalone using your browser's local storage as the data
@@ -81,4 +92,3 @@ drop-in swap.
 - Real two-sided accounts — send borrower a link to confirm/accept the agreement
 - Email/SMS reminders before due dates (Nodemailer / Twilio)
 - Payment proof upload (UPI/bank screenshot) for borrower-submitted confirmations
-# loandesk

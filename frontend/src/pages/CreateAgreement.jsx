@@ -3,10 +3,13 @@ import GlassCard from '../components/GlassCard'
 import { calculateEMI, generateSchedule, formatINR } from '../lib/calc'
 import { saveAgreement } from '../lib/storage'
 import { generateAgreementPDF } from '../lib/pdf'
+import { getCurrentUser } from '../lib/auth'
 import { FileDown, CheckCircle2 } from 'lucide-react'
 
+const currentUser = getCurrentUser()
+
 const initial = {
-  lenderName: '',
+  lenderName: currentUser?.name || '',
   borrowerName: '',
   principal: '',
   interestRate: '',
