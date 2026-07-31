@@ -69,7 +69,7 @@ export default function App() {
   return (
     <div className="min-h-screen pb-24 md:pb-0 font-body">
       <TopNav view={view} setView={goTo} user={user} onLogout={handleLogout} />
-      <main className="max-w-5xl mx-auto px-4 md:px-8 py-6 md:py-10">
+      <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
         {view === 'dashboard' && (
           <Dashboard agreements={agreements} openAgreement={openAgreement} setView={goTo} />
         )}
