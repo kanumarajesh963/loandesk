@@ -91,7 +91,7 @@ export default function CreateAgreement({ onCreated }) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       <div>
         <h1 className="font-display font-bold text-2xl md:text-3xl">New agreement</h1>
         <p className="text-mist text-sm mt-1">Both sides will see the same numbers, from day one.</p>

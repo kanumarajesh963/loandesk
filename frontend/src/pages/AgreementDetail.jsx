@@ -86,7 +86,7 @@ export default function AgreementDetail({ agreement, back, refresh }) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       <button onClick={back} className="focus-ring flex items-center gap-1.5 text-sm text-mist hover:text-white transition-colors">
         <ArrowLeft size={16} /> Back
       </button>

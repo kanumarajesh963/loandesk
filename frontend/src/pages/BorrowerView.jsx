@@ -8,7 +8,7 @@ export default function BorrowerView({ agreement }) {
 
   return (
     <div className="min-h-screen px-4 py-8 md:py-14">
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col items-center text-center mb-4">
           <div className="w-11 h-11 rounded-xl bg-teal/20 border border-teal/30 flex items-center justify-center mb-3">
             <HandCoins size={22} className="text-teal" />
